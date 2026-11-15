@@ -1,0 +1,18 @@
+.OuterContainer{
+    text-align: center;
+}.InfoBox{
+    display: flex;
+    justify-content: center;
+}
+.MuiCard-root {
+  width:400px;
+  max-width: 400px;
+  margin: 20px auto;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.MuiCardMedia-root {
+  height: 200px;
+}
