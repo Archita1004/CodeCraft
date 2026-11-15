@@ -1,0 +1,13 @@
+{
+  "name": "logic-evaluator-beginner",
+  "version": "1.0.0",
+  "description": "Student-Friendly Logic & Code Evaluator using HTML, CSS, JavaScript, Express, and SQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CodeCraft — Interactive Rubric Scoring Criteria for code and logic evaluation.">
+    <title>Scoring Rubrics — CodeCraft</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .rubrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .rubric-card {
+            background: rgba(47, 23, 86, 0.75);
+            border: 1px solid var(--color-lavender-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+
+        .rubric-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-lavender-accent);
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .weight-pill {
+            background: var(--color-violet-primary);
+            color: var(--color-white);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+        }
+
+        .rubric-card h2 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            color: var(--color-white);
+        }
+
+        .rubric-card p {
+            font-size: 0.9rem;
+            color: var(--color-lavender);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .slider-wrapper {
+            background: rgba(22, 11, 41, 0.7);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--color-lavender-accent);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--color-violet-light);
+            cursor: pointer;
+        }
+
+        .sim-result-card {
+            margin-top: 35px;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.6) 0%, rgba(37, 18, 69, 0.9) 100%);
+            border: 1.5px solid var(--color-lavender-accent);
+            border-radius: var(--radius-md);
+        }
+
+        .sim-score {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--color-white);
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Accessible Skip Link -->
+    <a href="#rubrics" class="skip-link">Skip to rubrics content</a>
+
+    <!-- Navbar -->
+    <header class="navbar-wrapper" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span>⚡ Code<strong>Craft</strong></span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="index.html">Home</a></li>
+                <li class="nav-item"><a href="evaluator.html">Evaluator</a></li>
+                <li class="nav-item active"><a href="rubrics.html">Rubrics</a></li>
+                <li class="nav-item"><a href="about.html">About</a></li>
+            </ul>
+
+            <div id="navAuth">
+                <a href="auth.html" class="nav-btn-signin">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="rubrics" class="page-container">
+        
+        <header class="section-header">
+            <h1>Evaluation Rubrics & Standards</h1>
+            <p>Every submission in CodeCraft is scored across 5 standardized academic pillars totaling 100 points.</p>
+        </header>
+
+        <!-- 5 Rubric Criteria Cards -->
+        <section class="rubrics-grid" aria-label="Grading Criteria Breakdown">
+            
+            <article class="rubric-card">
+                <div class="card-header-row">
+                    <span class="weight-pill">30% Weight</span>
+                    <span style="font-size: 1.4rem;" aria-hidden="true">🧠</span>
+                </div>
+                <h2>1. Logic & Correctness</h2>
+                <p>Verifies whether the algorithm reaches expected outputs accurately without logical deadlocks or missing edge handling.</p>
+                <div class="slider-wrapper">
+                    <div class="slider-label"><span>Accuracy Score:</span><span id="txtLogic">30 / 30 pts</span></div>
+                    <label for="slideLogic" class="sr-only" style="display:none;">Logic Score</label>
+                    <input type="range" id="slideLogic" min="0" max="30" value="30" oninput="calcTotal()">
+                </div>
+            </article>
+
+            <article class="rubric-card">
+                <div class="card-header-row">
+                    <span class="weight-pill">25% Weight</span>
+                    <span style="font-size: 1.4rem;" aria-hidden="true">⚡</span>
+                </div>
+                <h2>2. Time Complexity</h2>
+                <p>Inspects nested loops and operation scaling. Rewards optimal asymptotic Big-O bounds over brute-force solutions.</p>
+                <div class="slider-wrapper">
+                    <div class="slider-label"><span>Efficiency Score:</span><span id="txtTime">25 / 25 pts</span></div>
+                    <label for="slideTime" class="sr-only" style="display:none;">Time Complexity Score</label>
+                    <input type="range" id="slideTime" min="0" max="25" value="25" oninput="calcTotal()">
+                </div>
+            </article>
+
+            <article class="rubric-card">
+                <div class="card-header-row">
+                    <span class="weight-pill">15% Weight</span>
+                    <span style="font-size: 1.4rem;" aria-hidden="true">🔄</span>
+                </div>
+                <h2>3. Loop Structures</h2>
+                <p>Audits loop invariants, initialization, boundary off-by-one errors (<code>&lt;= length</code>), and infinite loop risks.</p>
+                <div class="slider-wrapper">
+                    <div class="slider-label"><span>Loop Safety:</span><span id="txtLoop">15 / 15 pts</span></div>
+                    <label for="slideLoop" class="sr-only" style="display:none;">Loop Safety Score</label>
+                    <input type="range" id="slideLoop" min="0" max="15" value="15" oninput="calcTotal()">
+                </div>
+            </article>
+
+            <article class="rubric-card">
+                <div class="card-header-row">
+                    <span class="weight-pill">15% Weight</span>
+                    <span style="font-size: 1.4rem;" aria-hidden="true">🔀</span>
+                </div>
+                <h2>4. Use of Conditions</h2>
+                <p>Ensures condition completeness (if/else), prevents accidental assignments (<code>=</code> instead of <code>==</code>), and validates bounds.</p>
+                <div class="slider-wrapper">
+                    <div class="slider-label"><span>Condition Coverage:</span><span id="txtCond">15 / 15 pts</span></div>
+                    <label for="slideCond" class="sr-only" style="display:none;">Condition Coverage Score</label>
+                    <input type="range" id="slideCond" min="0" max="15" value="15" oninput="calcTotal()">
+                </div>
+            </article>
+
+            <article class="rubric-card">
+                <div class="card-header-row">
+                    <span class="weight-pill">15% Weight</span>
+                    <span style="font-size: 1.4rem;" aria-hidden="true">🛡️</span>
+                </div>
+                <h2>5. Input-Output Handling</h2>
+                <p>Checks defensive null guards, parameter assertions, and clean returns adhering to functional interfaces.</p>
+                <div class="slider-wrapper">
+                    <div class="slider-label"><span>I/O Guards:</span><span id="txtIO">15 / 15 pts</span></div>
+                    <label for="slideIO" class="sr-only" style="display:none;">Input Output Score</label>
+                    <input type="range" id="slideIO" min="0" max="15" value="15" oninput="calcTotal()">
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Live Score Simulator -->
+        <section class="sim-result-card" aria-label="Interactive Score Simulation Result">
+            <h2 style="font-size: 1.3rem;">Interactive Rubric Simulator</h2>
+            <p style="color: var(--color-lavender); font-size: 0.95rem;">Drag the sliders above to preview how composite grades are calculated.</p>
+            
+            <div class="sim-score">
+                <span id="totalScore">100</span><span style="font-size: 1.4rem; color: var(--color-lavender-accent);"> / 100</span>
+            </div>
+
+            <div id="gradeBadge" style="display: inline-block; padding: 6px 18px; border-radius: 50px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: #A7F3D0; font-weight: 700;">
+                Grade: A+ (Optimal Performance & Clean Flow)
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <p>&copy; 2026 CodeCraft • Built with HTML, CSS, JavaScript, Express & SQL</p>
+    </footer>
+
+    <script>
+        function calcTotal() {
+            const l = parseInt(document.getElementById('slideLogic').value);
+            const t = parseInt(document.getElementById('slideTime').value);
+            const lp = parseInt(document.getElementById('slideLoop').value);
+            const c = parseInt(document.getElementById('slideCond').value);
+            const io = parseInt(document.getElementById('slideIO').value);
+
+            document.getElementById('txtLogic').textContent = l + ' / 30 pts';
+            document.getElementById('txtTime').textContent = t + ' / 25 pts';
+            document.getElementById('txtLoop').textContent = lp + ' / 15 pts';
+            document.getElementById('txtCond').textContent = c + ' / 15 pts';
+            document.getElementById('txtIO').textContent = io + ' / 15 pts';
+
+            const total = l + t + lp + c + io;
+            document.getElementById('totalScore').textContent = total;
+
+            const badge = document.getElementById('gradeBadge');
+            if (total >= 90) {
+                badge.textContent = 'Grade: A+ (Optimal Performance & Clean Flow)';
+                badge.style.borderColor = '#10B981';
+                badge.style.color = '#A7F3D0';
+            } else if (total >= 75) {
+                badge.textContent = 'Grade: B (Solid Implementation with Minor Flaws)';
+                badge.style.borderColor = '#60A5FA';
+                badge.style.color = '#BFDBFE';
+            } else if (total >= 60) {
+                badge.textContent = 'Grade: C (Suboptimal Complexity / Guard Issues)';
+                badge.style.borderColor = '#FBBF24';
+                badge.style.color = '#FDE68A';
+            } else {
+                badge.textContent = 'Grade: D (Significant Inefficiencies / Flaws)';
+                badge.style.borderColor = '#EF4444';
+                badge.style.color = '#FECACA';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CodeCraft — Comprehensive evaluation report with Big-O complexity, error detection, and code optimization recommendations.">
+    <title>Evaluation Results — CodeCraft</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Card Layout for Evaluation Overview Table */
+        .overview-card {
+            background: rgba(47, 23, 86, 0.85);
+            border: 1.5px solid var(--color-lavender-accent);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .overview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--color-lavender-border);
+        }
+
+        .score-box {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            background: rgba(22, 11, 41, 0.95);
+            border: 4px solid var(--color-violet-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.45);
+            flex-shrink: 0;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--color-white);
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.72rem;
+            color: var(--color-lavender-accent);
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        /* Beautiful Full-Width Metrics Table */
+        .metrics-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--color-lavender-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            font-size: 0.92rem;
+            margin-top: 10px;
+        }
+
+        .metrics-table th {
+            background: rgba(124, 58, 237, 0.35);
+            color: var(--color-white);
+            padding: 12px 16px;
+            font-weight: 700;
+            text-align: left;
+            border-bottom: 1px solid var(--color-lavender-border);
+        }
+
+        .metrics-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(196, 181, 253, 0.15);
+            color: var(--color-lavender);
+            background: rgba(30, 14, 55, 0.55);
+        }
+
+        .metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .metrics-table tr:hover td {
+            background: rgba(124, 58, 237, 0.18);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-optimal {
+            background: rgba(16, 185, 129, 0.2);
+            color: #A7F3D0;
+            border: 1px solid #10B981;
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FDE68A;
+            border: 1px solid #F59E0B;
+        }
+
+        /* Error list styling */
+        .error-card {
+            background: rgba(30, 14, 52, 0.85);
+            border-left: 4px solid #EF4444;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            color: #FEE2E2;
+        }
+
+        .error-card.clean {
+            border-left-color: #10B981;
+            color: #D1FAE5;
+        }
+
+        /* Code Comparison Grid */
+        .comparison-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .code-pane {
+            background: #0E051D;
+            border: 1.5px solid var(--color-lavender-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .pane-header {
+            background: rgba(47, 23, 86, 0.85);
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-lavender);
+            border-bottom: 1px solid var(--color-lavender-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .code-view {
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #E2E8F0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 380px;
+        }
+
+        /* LIGHTER COLOR FOR CODE COMMENTS */
+        .code-comment {
+            color: #DDD6FE !important; /* Soft light lavender for comments */
+            font-style: italic;
+            opacity: 0.92;
+        }
+
+        .code-code {
+            color: #6EE7B7; /* Crisp mint green for optimized code */
+        }
+
+        @media (max-width: 768px) {
+            .overview-header { flex-direction: column; text-align: center; }
+            .comparison-layout { grid-template-columns: 1fr; }
+            .metrics-table { font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Accessible Skip Link -->
+    <a href="#results-view" class="skip-link">Skip to results report</a>
+
+    <!-- Navbar -->
+    <header class="navbar-wrapper" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span>⚡ Code<strong>Craft</strong></span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="index.html">Home</a></li>
+                <li class="nav-item"><a href="evaluator.html">Evaluator</a></li>
+                <li class="nav-item"><a href="rubrics.html">Rubrics</a></li>
+                <li class="nav-item"><a href="about.html">About</a></li>
+            </ul>
+
+            <div id="navAuth">
+                <a href="auth.html" class="nav-btn-signin">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Results View -->
+    <main id="results-view" class="page-container">
+        
+        <header class="section-header">
+            <h1>Evaluation Report</h1>
+            <p>Automated logic metrics, Big-O Complexity, and recommended code optimization.</p>
+        </header>
+
+        <!-- FULL TABULAR OVERVIEW CARD WITH BENCHMARKS & VERIFIED STATUSES -->
+        <section class="overview-card" aria-label="Evaluation Metrics Summary Table">
+            <div class="overview-header">
+                <div>
+                    <h2 style="font-size: 1.6rem; color: #FFFFFF; margin-bottom: 6px;">Evaluation Overview</h2>
+                    <p style="color: var(--color-lavender); font-size: 0.92rem; max-width: 580px;">
+                        Scored across 5 academic criteria: Logic (30%), Time (25%), Loops (15%), Conditions (15%), and Input-Output (15%).
+                    </p>
+                </div>
+
+                <div class="score-box" aria-label="Total Score out of 100">
+                    <div id="scoreVal" class="score-number">100</div>
+                    <div class="score-label">Graded Score</div>
+                </div>
+            </div>
+
+            <!-- Tabular Metrics Table -->
+            <table class="metrics-table" aria-label="Evaluation Parameters Table">
+                <thead>
+                    <tr>
+                        <th scope="col">Evaluation Parameter</th>
+                        <th scope="col">Detected Result</th>
+                        <th scope="col">Standard Benchmark</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Submission Format</strong></td>
+                        <td id="tableFormat" style="color: var(--color-white); font-weight: 600;">Algorithm</td>
+                        <td>Algorithm / Flowchart / Pseudocode</td>
+                        <td><span class="status-badge status-optimal">Verified</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time Complexity (Big-O)</strong></td>
+                        <td id="tableTime" style="color: #DDD6FE; font-weight: 700; font-family: var(--font-mono);">O(1)</td>
+                        <td>Optimal: O(1) to O(n log n)</td>
+                        <td id="tableTimeStatus"><span class="status-badge status-optimal">Efficient</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space Complexity</strong></td>
+                        <td id="tableSpace" style="color: #DDD6FE; font-weight: 700; font-family: var(--font-mono);">O(1)</td>
+                        <td>Auxiliary Memory &lt; O(n)</td>
+                        <td><span class="status-badge status-optimal">Optimal</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logic & Bug Audit</strong></td>
+                        <td id="tableBugsCount">0 Critical Flaws</td>
+                        <td>No infinite loops or index bounds errors</td>
+                        <td id="tableBugsStatus"><span class="status-badge status-optimal">Passed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 1: Detected Bugs & Errors -->
+        <section style="margin-bottom: 30px;" aria-label="Error Detection">
+            <h2 style="font-size: 1.3rem; margin-bottom: 12px; color: #FFFFFF;">🔍 Detected Logic Flaws & Audits</h2>
+            <div id="errorContainer">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Section 2: Code Comparison -->
+        <section style="margin-bottom: 35px;" aria-label="Submitted Code vs Optimized Code">
+            <h2 style="font-size: 1.3rem; margin-bottom: 12px; color: #FFFFFF;">✨ Your Code vs Optimized Code</h2>
+            
+            <div class="comparison-layout">
+                <article class="code-pane">
+                    <div class="pane-header">
+                        <span>Original Submission</span>
+                        <span>Current</span>
+                    </div>
+                    <pre id="origCodeView" class="code-view"></pre>
+                </article>
+
+                <article class="code-pane" style="border-color: var(--color-violet-light);">
+                    <div class="pane-header" style="background: rgba(124, 58, 237, 0.4);">
+                        <span style="color: var(--color-white);">Optimized Code</span>
+                        <span style="color: #6EE7B7; font-weight: 700;">+ Ready</span>
+                    </div>
+                    <pre id="optCodeView" class="code-view"></pre>
+                </article>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 14px; justify-content: center; margin-top: 20px;">
+            <a href="evaluator.html" class="btn-primary">Evaluate Another Code</a>
+            <button onclick="window.print()" class="btn-outline">Print / Save Report</button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <p>&copy; 2026 CodeCraft • Built with HTML, CSS, JavaScript, Express & SQL</p>
+    </footer>
+
+    <script>
+        // Load stored result from sessionStorage
+        const raw = sessionStorage.getItem('currentResult');
+        if (raw) {
+            const data = JSON.parse(raw);
+            document.getElementById('scoreVal').textContent = data.score;
+            document.getElementById('tableFormat').textContent = data.submissionType || 'Algorithm';
+            document.getElementById('tableTime').textContent = data.timeComplexity || 'O(n)';
+            document.getElementById('tableSpace').textContent = data.spaceComplexity || 'O(1)';
+
+            // Adjust Time Status Badge
+            const timeStatus = document.getElementById('tableTimeStatus');
+            if (data.timeComplexity === 'O(n²)') {
+                timeStatus.innerHTML = '<span class="status-badge status-warning">Quadratic O(n²)</span>';
+            } else {
+                timeStatus.innerHTML = '<span class="status-badge status-optimal">Efficient</span>';
+            }
+
+            document.getElementById('origCodeView').textContent = data.originalCode || '// Code input';
+
+            // Optimized code with LIGHTER COMMENT COLORING
+            renderOptimizedCode(data.optimizedCode || '// No optimizations needed');
+
+            // Errors List
+            const errContainer = document.getElementById('errorContainer');
+            const bugsCount = document.getElementById('tableBugsCount');
+            const bugsStatus = document.getElementById('tableBugsStatus');
+
+            if (data.errors && data.errors.length > 0) {
+                const hasRealErrors = data.errors.some(e => !e.includes('Great job'));
+                if (hasRealErrors) {
+                    const count = data.errors.filter(e => !e.includes('Great job')).length;
+                    bugsCount.textContent = count + ' Issue' + (count > 1 ? 's' : '') + ' Found';
+                    bugsStatus.innerHTML = '<span class="status-badge status-warning">Review Needed</span>';
+                } else {
+                    bugsCount.textContent = '0 Critical Flaws';
+                    bugsStatus.innerHTML = '<span class="status-badge status-optimal">Passed</span>';
+                }
+
+                errContainer.innerHTML = data.errors.map(err => `
+                    <div class="error-card ${err.includes('Great job') ? 'clean' : ''}">
+                        ${escapeHtml(err)}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Format code comments with lighter lavender coloring
+        function renderOptimizedCode(codeText) {
+            const container = document.getElementById('optCodeView');
+            const lines = codeText.split('\n');
+
+            const formattedHtml = lines.map(line => {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
+                    return `<span class="code-comment">${escapeHtml(line)}</span>`;
+                } else {
+                    return `<span class="code-code">${escapeHtml(line)}</span>`;
+                }
+            }).join('\n');
+
+            container.innerHTML = formattedHtml;
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CodeCraft — Sign in or create an account to access automated code evaluation and history.">
+    <title>Sign In & Sign Up — CodeCraft</title>
+    <!-- Preconnect & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+
+    <!-- Header navigation back to Home -->
+    <header>
+        <a href="index.html" class="back-link" aria-label="Return to CodeCraft Home Page">
+            ← Back to CodeCraft
+        </a>
+    </header>
+
+    <!-- Accessible Alert Banner for Notifications -->
+    <div id="alertBox" class="alert-box" role="alert" aria-live="polite"></div>
+
+    <!-- Main Landmark: Double Sliding Card Container (from loginpage.png & signup.png) -->
+    <main class="container" id="container">
+        
+        <!-- 1. SIGN UP FORM -->
+        <div class="form-container sign-up">
+            <form id="signUpForm" novalidate>
+                <h1>Create Account</h1>
+                
+                <!-- Social Login Badges -->
+                <div class="social-icons" role="group" aria-label="Social sign up options">
+                    <a href="javascript:void(0)" aria-label="Sign up with Google">G+</a>
+                    <a href="javascript:void(0)" aria-label="Sign up with Facebook">f</a>
+                    <a href="javascript:void(0)" aria-label="Sign up with GitHub">GH</a>
+                    <a href="javascript:void(0)" aria-label="Sign up with LinkedIn">in</a>
+                </div>
+
+                <span>or use your email for registration</span>
+
+                <label for="regName" class="sr-only" style="display:none;">Full Name</label>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name" />
+
+                <label for="regEmail" class="sr-only" style="display:none;">Email Address</label>
+                <input type="email" id="regEmail" placeholder="Email" required autocomplete="email" />
+
+                <label for="regPassword" class="sr-only" style="display:none;">Password</label>
+                <input type="password" id="regPassword" placeholder="Password" required autocomplete="new-password" />
+
+                <button type="submit">SIGN UP</button>
+            </form>
+        </div>
+
+        <!-- 2. SIGN IN FORM -->
+        <div class="form-container sign-in">
+            <form id="signInForm" novalidate>
+                <h1>Sign In</h1>
+
+                <!-- Social Login Badges -->
+                <div class="social-icons" role="group" aria-label="Social sign in options">
+                    <a href="javascript:void(0)" aria-label="Sign in with Google">G+</a>
+                    <a href="javascript:void(0)" aria-label="Sign in with Facebook">f</a>
+                    <a href="javascript:void(0)" aria-label="Sign in with GitHub">GH</a>
+                    <a href="javascript:void(0)" aria-label="Sign in with LinkedIn">in</a>
+                </div>
+
+                <span>or use your email and password</span>
+
+                <label for="loginEmail" class="sr-only" style="display:none;">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="Email" required autocomplete="email" />
+
+                <label for="loginPassword" class="sr-only" style="display:none;">Password</label>
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password" />
+
+                <a href="javascript:void(0)" onclick="alert('Password reset link sent to your registered email.')">Forget Your Password?</a>
+
+                <button type="submit">SIGN IN</button>
+            </form>
+        </div>
+
+        <!-- 3. SLIDING CURVED VIOLET OVERLAY -->
+        <div class="toggle-container" aria-hidden="true">
+            <div class="toggle">
+                <!-- Toggle Left Panel (shown when switching to Sign In) -->
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all site features</p>
+                    <button class="ghost-btn" id="loginBtn" type="button">SIGN IN</button>
+                </div>
+
+                <!-- Toggle Right Panel (shown when switching to Sign Up) -->
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all site features</p>
+                    <button class="ghost-btn" id="registerBtn" type="button">SIGN UP</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Student-Friendly Client Script -->
+    <script>
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const alertBox = document.getElementById('alertBox');
+
+        // Sliding toggle between Sign In and Sign Up
+        registerBtn.addEventListener('click', () => {
+            container.classList.add('active');
+            clearAlert();
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove('active');
+            clearAlert();
+        });
+
+        function showAlert(msg, isSuccess = false) {
+            alertBox.textContent = msg;
+            alertBox.className = 'alert-box ' + (isSuccess ? 'alert-success' : 'alert-error');
+        }
+
+        function clearAlert() {
+            alertBox.className = 'alert-box';
+            alertBox.textContent = '';
+        }
+
+        // Handle Registration
+        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlert();
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!name || !email || !password) {
+                showAlert('Please fill in all fields!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed.');
+                }
+
+                // Save user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                showAlert('Account created successfully! Redirecting...', true);
+
+                setTimeout(() => {
+                    window.location.href = 'evaluator.html';
+                }, 800);
+            } catch (err) {
+                showAlert(err.message);
+            }
+        });
+
+        // Handle Login
+        document.getElementById('signInForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAlert();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showAlert('Please provide both email and password!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed.');
+                }
+
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                showAlert('Signed in successfully! Redirecting...', true);
+
+                setTimeout(() => {
+                    window.location.href = 'evaluator.html';
+                }, 800);
+            } catch (err) {
+                showAlert(err.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CodeCraft — Evaluate code algorithms, flowchart node hierarchies, and pseudocode logic with automated bug checks.">
+    <title>Evaluator Workspace — CodeCraft</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+
+        .editor-box {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-lavender-border);
+        }
+
+        .select-field {
+            background: var(--color-violet-dark);
+            color: var(--color-white);
+            border: 1.5px solid var(--color-lavender-accent);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .preset-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-preset {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--color-lavender-accent);
+            color: var(--color-lavender);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-preset:hover {
+            background: var(--color-violet-primary);
+            color: var(--color-white);
+        }
+
+        .code-input-area {
+            width: 100%;
+            min-height: 360px;
+            padding: 16px;
+            background: #0E051D;
+            color: #E2E8F0;
+            border: 1.5px solid var(--color-lavender-border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .code-input-area:focus-visible {
+            border-color: var(--color-violet-light);
+        }
+
+        .sidebar-card {
+            background: rgba(47, 23, 86, 0.7);
+            border: 1px solid var(--color-lavender-border);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-card h2 {
+            font-size: 1.15rem;
+            color: var(--color-white);
+            margin-bottom: 12px;
+        }
+
+        .rubric-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rubric-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(196, 181, 253, 0.15);
+        }
+
+        .rubric-item span:first-child { color: var(--color-lavender); }
+        .rubric-item span:last-child { font-weight: 700; color: var(--color-lavender-accent); }
+
+        @media (max-width: 900px) {
+            .workspace-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Accessible Skip Link -->
+    <a href="#workspace" class="skip-link">Skip to evaluation workspace</a>
+
+    <!-- Navbar -->
+    <header class="navbar-wrapper" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span>⚡ Code<strong>Craft</strong></span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="index.html">Home</a></li>
+                <li class="nav-item active"><a href="evaluator.html">Evaluator</a></li>
+                <li class="nav-item"><a href="rubrics.html">Rubrics</a></li>
+                <li class="nav-item"><a href="about.html">About</a></li>
+            </ul>
+
+            <div id="navAuth">
+                <a href="auth.html" class="nav-btn-signin">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Workspace -->
+    <main id="workspace" class="page-container">
+        
+        <header class="section-header">
+            <h1>Evaluation Workspace</h1>
+            <p>Paste your algorithm, pseudocode, or flowchart logic to detect bugs and inspect Time Complexity.</p>
+        </header>
+
+        <div class="workspace-layout">
+            
+            <!-- Main Code Form -->
+            <section class="glass-card editor-box" aria-label="Code Editor Form">
+                <form id="evalForm">
+                    
+                    <div class="controls-bar">
+                        <div>
+                            <label for="submissionType" style="font-weight: 600; margin-right: 8px; font-size: 0.9rem;">Format:</label>
+                            <select id="submissionType" class="select-field">
+                                <option value="Algorithm">⚡ Algorithm / Code</option>
+                                <option value="Flowchart">❖ Flowchart</option>
+                                <option value="Pseudocode">📝 Pseudocode</option>
+                            </select>
+                        </div>
+
+                        <!-- Sample Presets -->
+                        <div class="preset-group">
+                            <span style="font-size: 0.8rem; color: var(--color-lavender);">Try Sample:</span>
+                            <button type="button" class="btn-preset" onclick="loadSample('binary')">Binary Search</button>
+                            <button type="button" class="btn-preset" onclick="loadSample('bubblesort')">Bubble Sort (Flawed)</button>
+                            <button type="button" class="btn-preset" onclick="loadSample('pseudocode')">Pseudocode</button>
+                            <button type="button" class="btn-preset" onclick="loadSample('flowchart')">Flowchart</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px;">
+                        <label for="codeInput" class="sr-only" style="display:none;">Code or Flowchart Input</label>
+                        <textarea id="codeInput" class="code-input-area" placeholder="// Paste your code, pseudocode or flowchart here...
+// Or click any sample button above to load a preset!"></textarea>
+                    </div>
+
+                    <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+                        <button type="submit" id="btnSubmit" class="btn-primary" style="width: 100%; max-width: 250px;">
+                            Run Evaluation
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- Sidebar Info -->
+            <aside aria-label="Rubric Standards and Advice">
+                
+                <section class="sidebar-card">
+                    <h2>Rubric Weighting</h2>
+                    <ul class="rubric-list">
+                        <li class="rubric-item"><span>Logic & Correctness</span><span>30 pts</span></li>
+                        <li class="rubric-item"><span>Time Complexity</span><span>25 pts</span></li>
+                        <li class="rubric-item"><span>Loop Structures</span><span>15 pts</span></li>
+                        <li class="rubric-item"><span>Use of Conditions</span><span>15 pts</span></li>
+                        <li class="rubric-item"><span>Input-Output Safety</span><span>15 pts</span></li>
+                    </ul>
+                    <a href="rubrics.html" style="display: block; font-size: 0.85rem; color: var(--color-lavender-accent); margin-top: 12px; text-decoration: none;">View Rubrics Details →</a>
+                </section>
+
+                <section class="sidebar-card">
+                    <h2>Evaluation Tips</h2>
+                    <p style="font-size: 0.88rem; color: var(--color-lavender); line-height: 1.6;">
+                        • Manage time complexity<br>
+                        • Manage time constant<br>
+                        • Ensure the loops are used correctly
+                    </p>
+                </section>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <p>&copy; 2026 CodeCraft • Student Project Edition • Built with HTML, CSS, JavaScript, Express & SQL</p>
+    </footer>
+
+    <script>
+        // Preset sample snippets
+        const SAMPLES = {
+            binary: `// Optimized Binary Search
+function binarySearch(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        if (arr[mid] === target) return mid;
+        if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}`,
+            bubblesort: `// Inefficient Bubble Sort with an off-by-one error
+function bubbleSort(arr) {
+    let n = arr.length;
+    for (let i = 0; i <= n; i++) { // Flaw: "<= n" triggers undefined
+        for (let j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    return arr;
+}`,
+            pseudocode: `ALGORITHM ProcessItems(itemList)
+    INITIALIZE count <- 0
+    INITIALIZE total <- 0
+
+    IF itemList IS NULL THEN
+        RETURN 0
+    END IF
+
+    FOR EACH item IN itemList DO
+        total <- total + item.score
+        count <- count + 1
+    END FOR
+
+    RETURN total / count
+END ALGORITHM`,
+            flowchart: `graph TD
+    Start([Start: Input Data]) --> Check{Is Data Valid?}
+    Check -->|No| ShowError[Output Error] --> End([Stop])
+    Check -->|Yes| Process[Compute Result] --> SaveDB[(Save to SQL)]
+    SaveDB --> Output[Display Output] --> End`
+        };
+
+        function loadSample(key) {
+            const input = document.getElementById('codeInput');
+            const select = document.getElementById('submissionType');
+            if (key === 'flowchart') select.value = 'Flowchart';
+            else if (key === 'pseudocode') select.value = 'Pseudocode';
+            else select.value = 'Algorithm';
+
+            input.value = SAMPLES[key];
+        }
+
+        // Form Submission
+        document.getElementById('evalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submissionType = document.getElementById('submissionType').value;
+            const codeInput = document.getElementById('codeInput').value.trim();
+            const btn = document.getElementById('btnSubmit');
+
+            if (!codeInput) {
+                alert('Please enter your code or flowchart first!');
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Evaluating...';
+
+                const response = await fetch('/api/evaluate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ submissionType, codeInput })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Evaluation failed.');
+                }
+
+                // Save in sessionStorage and open Results page
+                sessionStorage.setItem('currentResult', JSON.stringify({
+                    ...data,
+                    originalCode: codeInput
+                }));
+
+                window.location.href = 'results.html';
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Run Evaluation';
+            }
+        });
+    </script>
+</body>
+</html>

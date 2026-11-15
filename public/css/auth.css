@@ -1,0 +1,315 @@
+/* ============================================================
+   AUTHENTICATION SLIDING CARD CSS
+   Matches loginpage.png and signup.png with Violet, Lavender & White!
+   ============================================================ */
+
+.auth-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #2E1556 0%, #17092B 100%);
+    padding: 60px 20px 20px;
+}
+
+.back-link {
+    color: var(--color-lavender);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: var(--color-white);
+}
+
+/* Alert Notification */
+.alert-box {
+    display: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    max-width: 760px;
+    width: 100%;
+    text-align: center;
+}
+
+.alert-success {
+    display: block;
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid #10B981;
+    color: #A7F3D0;
+}
+
+.alert-error {
+    display: block;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #EF4444;
+    color: #FECACA;
+}
+
+/* The Main Sliding Container */
+.container {
+    background-color: #FFFFFF;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+    color: #333333;
+}
+
+.container form {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+}
+
+.container h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.container span {
+    font-size: 12px;
+    color: #777777;
+    margin: 8px 0;
+}
+
+.container input {
+    background-color: #F1EDF9;
+    border: 1px solid transparent;
+    padding: 12px 15px;
+    margin: 6px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+}
+
+.container input:focus {
+    border-color: var(--color-violet-primary);
+    background-color: #FFFFFF;
+}
+
+.container a {
+    color: #555555;
+    font-size: 13px;
+    text-decoration: none;
+    margin: 12px 0;
+}
+
+.container a:hover {
+    color: var(--color-violet-primary);
+}
+
+.container button {
+    background-color: var(--color-violet-primary);
+    color: #FFFFFF;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.container button:hover {
+    background-color: #6D28D9;
+}
+
+.container button.ghost-btn {
+    background-color: transparent;
+    border-color: #FFFFFF;
+}
+
+.container button.ghost-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Social Icon Badges */
+.social-icons {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.social-icons a {
+    border: 1px solid #DDD6FE;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    color: var(--color-violet-primary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    background: #FAF8FF;
+}
+
+.social-icons a:hover {
+    background: var(--color-violet-primary);
+    color: #FFFFFF;
+}
+
+/* Sliding Panels Positioning */
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.sign-in {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.container.active .sign-in {
+    transform: translateX(100%);
+}
+
+.sign-up {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.active .sign-up {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+@keyframes show {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+/* Curved Violet Overlay Panel */
+.toggle-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 10;
+}
+
+.container.active .toggle-container {
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+.toggle {
+    background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%);
+    color: #FFFFFF;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.container.active .toggle {
+    transform: translateX(50%);
+}
+
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle-panel h1 {
+    font-size: 2rem;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.toggle-panel p {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--color-lavender);
+    margin: 14px 0 20px;
+}
+
+.toggle-left {
+    transform: translateX(-200%);
+}
+
+.container.active .toggle-left {
+    transform: translateX(0);
+}
+
+.toggle-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.active .toggle-right {
+    transform: translateX(200%);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+    .toggle-container {
+        display: none;
+    }
+    .form-container {
+        width: 100%;
+    }
+    .sign-up {
+        display: none;
+    }
+    .container.active .sign-in {
+        display: none;
+    }
+    .container.active .sign-up {
+        display: block;
+        opacity: 1;
+        width: 100%;
+    }
+}

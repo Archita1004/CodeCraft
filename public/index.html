@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CodeCraft — An accessible full-stack logic evaluator and code debugger built with HTML, CSS, JavaScript, Express, and SQL.">
+    <title>CodeCraft — Code & Logic Evaluator</title>
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Modern Hero with accessible semantics & CSS animation */
+        .hero {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 130px 20px 80px;
+            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.35) 0%, rgba(26, 11, 46, 0.98) 75%);
+            overflow: hidden;
+        }
+
+        .glow-circle {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite alternate;
+        }
+        .glow-1 { top: 8%; left: 12%; }
+        .glow-2 { bottom: 12%; right: 12%; animation-duration: 8s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-24px) scale(1.08); }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.25);
+            border: 1px solid var(--color-lavender-accent);
+            color: var(--color-lavender);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 4.4rem);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+            color: var(--color-white);
+            margin-bottom: 18px;
+            text-shadow: 0 4px 25px rgba(124, 58, 237, 0.5);
+            z-index: 2;
+        }
+
+        .hero p {
+            max-width: 680px;
+            font-size: 1.15rem;
+            color: var(--color-lavender);
+            margin-bottom: 32px;
+            line-height: 1.6;
+            z-index: 2;
+        }
+
+        /* 3 Bottom feature cards (Matches front page.png layout) */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            width: 100%;
+            max-width: 980px;
+            margin-top: 50px;
+            z-index: 2;
+        }
+
+        .feature-card {
+            background: rgba(42, 19, 78, 0.85);
+            border: var(--border-style);
+            border-radius: 16px;
+            padding: 26px;
+            text-align: left;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover,
+        .feature-card:focus-visible {
+            transform: translateY(-6px);
+            border-color: var(--color-lavender-accent);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+        }
+
+        .card-num {
+            color: var(--color-lavender-accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+            color: var(--color-lavender);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: 8px;
+        }
+
+        .card-text {
+            font-size: 0.88rem;
+            color: var(--color-lavender);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 820px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Accessible Skip Link for Keyboard Navigation (Industry Standard) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Semantic Header with Floating Pill Navigation -->
+    <header class="navbar-wrapper" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand" aria-label="CodeCraft Home">
+                <span class="brand-logo" aria-hidden="true">⚡</span>
+                <span>Code<strong>Craft</strong></span>
+            </a>
+
+            <ul class="nav-links" role="menubar">
+                <li class="nav-item active" role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li class="nav-item" role="none"><a href="evaluator.html" role="menuitem">Evaluator</a></li>
+                <li class="nav-item" role="none"><a href="rubrics.html" role="menuitem">Rubrics</a></li>
+                <li class="nav-item" role="none"><a href="about.html" role="menuitem">About</a></li>
+            </ul>
+
+            <div id="navAuth" class="nav-auth">
+                <a href="auth.html" class="nav-btn-signin" aria-label="Sign In or Sign Up">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="hero">
+        <div class="glow-circle glow-1" aria-hidden="true"></div>
+        <div class="glow-circle glow-2" aria-hidden="true"></div>
+
+        <div class="hero-badge">⚡ Automated Code & Logic Verification</div>
+        <h1>UNIFYING CODE & LOGIC.</h1>
+        <p>
+            Spot logical bugs, inspect infinite loops, evaluate Big-O Time Complexity, and discover optimized implementations with automated academic rubrics.
+        </p>
+
+        <a href="evaluator.html" class="btn-primary" aria-label="Try Code Evaluator Now">Try Evaluator</a>
+
+        <!-- Feature Cards (Matching front page.png layout) -->
+        <section class="feature-grid" aria-label="Core Evaluation Features">
+            
+            <article>
+                <a href="evaluator.html?type=Flowchart" class="feature-card" aria-label="Flowchart Analysis feature">
+                    <span class="card-num" aria-hidden="true">(1)</span>
+                    <div class="card-icon" aria-hidden="true">❖</div>
+                    <h2 class="card-title">Flowchart Analysis</h2>
+                    <p class="card-text">Checks for defined start nodes, valid branch decisions, and clean terminal exits.</p>
+                </a>
+            </article>
+
+            <article>
+                <a href="evaluator.html?type=Algorithm" class="feature-card" aria-label="Algorithm Verification feature">
+                    <span class="card-num" aria-hidden="true">(2)</span>
+                    <div class="card-icon" aria-hidden="true">[ &lt; &gt; ]</div>
+                    <h2 class="card-title">Algorithm Verification</h2>
+                    <p class="card-text">Audits Big-O Time Complexity, index bounds, and detects loop off-by-one errors.</p>
+                </a>
+            </article>
+
+            <article>
+                <a href="evaluator.html?type=Pseudocode" class="feature-card" aria-label="Pseudocode Scoring feature">
+                    <span class="card-num" aria-hidden="true">(3)</span>
+                    <div class="card-icon" aria-hidden="true">🗂️</div>
+                    <h2 class="card-title">Pseudocode Scoring</h2>
+                    <p class="card-text">Verifies variable scopes and logic flow against 5 standardized rubric criteria.</p>
+                </a>
+            </article>
+
+        </section>
+    </main>
+
+    <!-- Semantic Footer -->
+    <footer class="footer" role="contentinfo">
+        <p>&copy; 2026 <strong>CodeCraft</strong> • Built with HTML5, CSS3, JavaScript, Node.js, Express & SQL</p>
+    </footer>
+
+    <!-- Client Script -->
+    <script>
+        // Check session and display user greeting
+        const userJson = localStorage.getItem('currentUser');
+        if (userJson) {
+            const user = JSON.parse(userJson);
+            const navAuth = document.getElementById('navAuth');
+            navAuth.innerHTML = `
+                <span class="user-greeting" style="color: var(--color-lavender-accent); font-weight: 600; margin-right: 8px;">👤 ${escapeHtml(user.name)}</span>
+                <button onclick="logout()" class="btn-logout" aria-label="Log Out">Log Out</button>
+            `;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+    </script>
+</body>
+</html>
